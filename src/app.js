@@ -37,7 +37,11 @@ app.get("/books/:id", (req, res) => {
   });
 });
 
-// Гэрийн даалгаврын route-ууд
+// ==========================================
+// ГЭРИЙН ДААЛГАВАР (Бүх GET endpoint-ууд)
+// ==========================================
+
+// /about route
 app.get("/about", (req, res) => {
   res.json({
     projectName: "Library API",
@@ -46,6 +50,7 @@ app.get("/about", (req, res) => {
   });
 });
 
+// /students route
 app.get("/students", (req, res) => {
   res.json([
     { id: 1, name: "Bold", major: "Software Engineering" },
@@ -54,6 +59,7 @@ app.get("/students", (req, res) => {
   ]);
 });
 
+// /courses route
 app.get("/courses", (req, res) => {
   res.json([
     { courseId: "CS101", title: "Node.js Backend Development", credits: 3 },
@@ -61,6 +67,7 @@ app.get("/courses", (req, res) => {
   ]);
 });
 
+// Серверийг асаах
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
