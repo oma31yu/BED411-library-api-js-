@@ -26,7 +26,7 @@ app.get("/health", (req, res) => {
   });
 });
 
-// === СЕМИНАР 2: BOOKS ROUTES (Async/Await ба Error Handling) === //
+// СЕМИНАР 2: BOOKS ROUTES (Async/Await ба Error Handling) //
 
 app.get("/books", async (req, res) => {
   const q = req.query.q;
