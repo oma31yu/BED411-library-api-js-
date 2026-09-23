@@ -1,4 +1,11 @@
 import express from "express";
+import {
+  books,
+  findBookById,
+  searchByTitle,
+  getBooksFromDb,
+  getBookOrThrow
+} from "./books.js";
 
 const app = express();
 const PORT = 3000;
@@ -19,7 +26,37 @@ app.get("/health", (req, res) => {
   });
 });
 
-// 3. Profile route
+// === СЕМИНАР 2: BOOKS ROUTES (Async/Await ба Error Handling) === //
+
+app.get("/books", async (req, res) => {
+  const q = req.query.q;
+  const dbBooks = await getBooksFromDb(); // 0.5 секунд хүлээх
+
+  if (q) {
+    return res.json(
+      dbBooks.filter((book) =>
+        book.title.toLowerCase().includes(q.toLowerCase())
+      )
+    );
+  }
+  res.json(dbBooks);
+});
+
+app.get("/books/:id", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const book = getBookOrThrow(id);
+    res.json(book);
+  } catch (error) {
+    res.status(404).json({
+      message: error.message
+    });
+  }
+});
+
+// ========================================================== //
+
+// Бусад хуучин route-ууд хэвээрээ
 app.get("/profile", (req, res) => {
   res.json({
     name: "Bat",
@@ -28,17 +65,6 @@ app.get("/profile", (req, res) => {
   });
 });
 
-// 4. Books dynamic parameter route
-app.get("/books/:id", (req, res) => {
-  const id = Number(req.params.id);
-  res.json({
-    id: id,
-    title: "Node.js Basics"
-  });
-});
-
-
-// /about route
 app.get("/about", (req, res) => {
   res.json({
     projectName: "Library API",
@@ -47,7 +73,6 @@ app.get("/about", (req, res) => {
   });
 });
 
-// /students route
 app.get("/students", (req, res) => {
   res.json([
     { id: 1, name: "Bold", major: "Software Engineering" },
@@ -56,7 +81,6 @@ app.get("/students", (req, res) => {
   ]);
 });
 
-// /courses route
 app.get("/courses", (req, res) => {
   res.json([
     { courseId: "CS101", title: "Node.js Backend Development", credits: 3 },
