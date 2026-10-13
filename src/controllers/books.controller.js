@@ -1,22 +1,38 @@
-import * as db from "../data/books.js";
+import { books } from "../data/books.js";
 
-export const list = (req, res) => res.json({ count: db.books.length, data: db.books });
+// Бүх номыг авах
+export function getAllBooks(req, res) {
+  res.json(books);
+}
 
-export const getOne = (req, res) => {
-  const book = db.findBookById(Number(req.params.id));
-  book ? res.json(book) : res.status(404).json({ message: "Not found" });
-};
+// Хайлт хийх
+export function searchBooks(req, res) {
+  const query = req.query.q || "";
+  const filtered = books.filter((b) => b.title.toLowerCase().includes(query.toLowerCase()));
+  res.json(filtered);
+}
 
-export const create = (req, res) => {
-  if (!req.body.title) return res.status(400).json({ message: "title is required" });
-  res.status(201).json(db.addBook(req.body));
-};
+// ID-аар нь авах (Number болгож хувиргаж байна)
+export function getBookById(req, res) {
+  const id = Number(req.params.id);
+  const book = books.find((b) => b.id === id);
 
-export const update = (req, res) => {
-  const updated = db.updateBook(Number(req.params.id), req.body);
-  updated ? res.json(updated) : res.status(404).json({ message: "Not found" });
-};
+  if (!book) {
+    return res.status(404).json({ message: "Book not found" });
+  }
+  res.json(book);
+}
 
-export const remove = (req, res) => {
-  db.removeBook(Number(req.params.id)) ? res.status(204).send() : res.status(404).json({ message: "Not found" });
-};
+// Шинэ ном нэмэх (return ашиглаж алдаанаас сэргийлсэн)
+export function createBook(req, res) {
+  const { title } = req.body;
+
+  if (!title) {
+    return res.status(400).json({ message: "title is required" });
+  }
+
+  const newBook = { id: books.length + 1, title };
+  books.push(newBook);
+  
+  res.status(201).json(newBook);
+}

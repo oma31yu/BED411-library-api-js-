@@ -1,8 +1,7 @@
-export function notFound(req, res) {
+export function notFound(req, res, next) {
   res.status(404).json({ message: "Route not found" });
 }
 
-export function errorHandler(error, req, res, next) {
-  console.error(error);
-  res.status(500).json({ message: "Internal server error" });
+export function errorHandler(err, req, res, next) {
+  res.status(500).json({ message: err.message });
 }
